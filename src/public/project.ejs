@@ -1,0 +1,81 @@
+<html>
+	<head>
+		<title>
+		Projects
+		</title>
+	</head>
+	<body>
+		<form id="get-project-form" method="post">
+			<input required type="text" name="id" placeholder="id">
+			<input id="register-btn" type="submit" value="Submit">
+		</form>
+		<h1>
+		<% if(project){ %>
+			<div data-internalid="<%= project._id %>" >
+				<h2> <%= project.project_name %> </h2>
+			</div>
+		<% } %>
+		</h1>
+		<form id="add-todo-form" method="post">
+			<input required type="text" name="todo_name" placeholder="name">
+			<input required type="text" name="todo_description" placeholder="description">
+			<input required type="text" name="type" placeholder="type">
+			<input required type="text" name="state" placeholder="state">
+			<input id="register-btn" type="submit" value="Submit">
+		</form>
+		<% if(todos && Object.keys(todos).length > 0){ %>
+			<% for(var i = 0; i < Object.keys(todos).length; i++){ %>
+				<div data-internalid="<%= todos[i]._id %>"> 
+					<h2> <%= todos[i].todo_name %> <%= todos[i].todo_description %> </h2>
+				</div>
+			<% } %>
+		<% } %>
+	</body> 
+	<script type="text/javascript">
+			const getform = document.querySelector("#get-project-form");
+			const form = document.querySelector("#add-todo-form");
+
+			getform.addEventListener("submit", async (event)=>{
+				event.preventDefault();
+
+				const _id = getform.id.value;
+
+				const response = await fetch('/api/project/project', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ _id: _id })
+				});
+				if(response.ok){
+					window.location = '/project';
+				}else{
+					const error = await response.json();
+					alert(error.statusMessage);
+					console.log(error);
+				}
+			});
+
+			form.addEventListener("submit", async (event)=>{
+				event.preventDefault();
+
+				const todo_name = form.todo_name.value;
+				const todo_description = form.todo_description.value;
+				const type = form.type.value;
+				const state = form.state.value;
+
+				const response = await fetch('/api/todo/insert', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ todo_name: todo_name, todo_description: todo_description, type: type, state: state })
+				});
+
+				if(response.ok){
+					window.location = '/project';
+				}else{
+					const error = await response.json();
+					alert(error.statusMessage);
+					console.log(error);
+				}
+			});
+
+	</script>
+</html>

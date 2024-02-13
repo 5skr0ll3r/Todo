@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<title>
+		register
+		</title>
+	</head>
+	<body>
+		<h1>
+		gamiese
+		</h1>
+		<form id="register-form" method="post">
+			<input required type="text" name="first_name" placeholder="Adam">
+			<input required type="text" name="last_name" placeholder="Williams">
+			<input required type="text" name="username" placeholder="adamWill">
+			<input required type="text" name="email" placeholder="adam@example.com">
+			<input required type="password" name="password" placeholder="P@ssW0rD!">
+			<input id="register-btn" type="submit" value="Register">
+		</form>
+	</body>
+	<script>
+		const form = document.querySelector("#register-form")
+		form.addEventListener("submit", async (event)=>{
+			event.preventDefault();
+
+			const first_name = form.first_name.value;
+			const last_name = form.last_name.value;
+			const username = form.username.value;
+			const email = form.email.value;
+			const password = form.password.value;
+
+			const response = await fetch('/api/user/register', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ first_name, last_name, username, email, password })
+			});
+
+			if(response.ok){
+				window.location.href = '/login';
+			}else{
+				const error = await response.json();
+				alert(error.statusMessage);
+				console.log(error);
+			}
+		});
+	</script>
+</html>

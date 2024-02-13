@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<title>
+		login
+		</title>
+	</head>
+	<body>
+		<h1>
+		gamiese
+		</h1>
+		<form id="login-form" method="post">
+			<input type="text" name="email" placeholder="example@provider.com">
+			<input type="password" name="password" placeholder="P@ssw0rD!">
+			<input type="submit" value="Login">
+		</form>
+		<script>
+			const form = document.querySelector("#login-form")
+			form.addEventListener("submit", async (event)=>{
+				event.preventDefault();
+
+				const email = form.email.value;
+				const password = form.password.value;
+
+				const response = await fetch('/api/user/login', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email, password })
+				});
+
+				if(response.ok){
+					window.location = '/home';
+				}else{
+					const error = await response.json();
+					alert(error.statusMessage);
+					console.log(error);
+				}
+			});
+		</script>
+	</body>
+</html>

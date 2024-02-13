@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<title>
+		Projects
+		</title>
+	</head>
+	<body>
+		<h1>
+		gamiese
+		</h1>
+		<form id="add-project-form" method="post">
+			<input required type="text" name="project_name" placeholder="Adam">
+			<input id="register-btn" type="submit" value="Submit">
+		</form>
+		<% if(projects && Object.keys(projects).length != 0){ %>
+			<% for(var i = 0; i < Object.keys(projects).length; i++){ %>
+				<div data-internalid="<%= projects[i]._id %>" >
+					<h2> <%= projects[i].project_name %> </h2>
+				</div>
+			<% } %>
+		<% } %>
+	</body>
+	<script>
+
+		const form = document.querySelector("#add-project-form")
+		form.addEventListener("submit", async (event)=>{
+			event.preventDefault();
+
+			const project_name = form.project_name.value;
+
+			const response = await fetch('/api/project/insert', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ project_name })
+			});
+
+			if(response.ok){
+				window.location = '/projects';
+			}else{
+				const error = await response.json();
+				alert(error.statusMessage);
+				console.log(error);
+			}
+		});
+	</script>
+</html>
